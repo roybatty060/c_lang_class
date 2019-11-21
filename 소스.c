@@ -1,38 +1,33 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <string.h>
 
-int last_index = 0;
+int last_index = 0, i = 1;
 
-int function(int num_list[], char cal_list[], int cal_index)
+int function(int list[], int arg, char *args[])
 {
 	int value;
-	int c_index = 0;
-	if (last_index != cal_index + 1)
-		return -1;
-	last_index--;
-	while (c_index < cal_index)
+	while (i == arg || args[i][0] < '0' || args[i][0] == 'x')
 	{
-		switch (cal_list[c_index])
+		if (i == arg)
+			return 1;
+		switch (args[i][0])
 		{
 		case '+':
-			value = num_list[last_index - 1] + num_list[last_index];
-			;
+			value = list[last_index - 1] + list[last_index];
 			break;
 		case '-':
-			value = num_list[last_index - 1] - num_list[last_index];
+			value = list[last_index - 1] - list[last_index];
 			break;
 		case 'x':
-			value = num_list[last_index - 1] * num_list[last_index];
+			value = list[last_index - 1] * list[last_index];
 			break;
 		case '%':
-			if (num_list[last_index] == 0)
+			if (list[last_index] == 0)
 				return -1;
-			value = num_list[last_index - 1] / num_list[last_index];
+			value = list[last_index - 1] / list[last_index];
 			break;
 		}
-		num_list[--last_index] = value;
-		c_index++;
+		list[--last_index] = value;
+		i++;
 	}
 	last_index++;
 	return 0;
@@ -40,10 +35,8 @@ int function(int num_list[], char cal_list[], int cal_index)
 
 int main(int arg, char *args[])
 {
-	int num_list[100];
-	char cal_list[100];
-	int i = 1;
-	int num, cal_index;
+	int list[100];
+	int num;
 
 	if (arg - 1 < 10)
 	{
@@ -54,30 +47,21 @@ int main(int arg, char *args[])
 	{
 		if (args[i][0] < '0' || args[i][0] == 'x')
 		{
-			cal_index = 0;
-			while (i == arg || args[i][0] < '0' || args[i][0] == 'x')
-			{
-				if (i == arg)
-				{
-					num = function(num_list, cal_list, cal_index);
-					if (num == -1)
-					{
-						printf("error");
-						return 0;
-					}
-					printf("%d", num_list[0]);
-					return 0;
-				}
-				cal_list[cal_index++] = args[i++][0];
-			}
-			num = function(num_list, cal_list, cal_index);
+			last_index--;
+			num = function(list, arg, args);
 			if (num == -1)
 			{
 				printf("error");
 				return 0;
 			}
-			continue;
+			else if (num == 1)
+			{
+				printf("%d", list[0]);
+				return 0;
+			}
+			else
+				continue;
 		}
-		num_list[last_index++] = args[i++][0] - '0';
+		list[last_index++] = args[i++][0] - '0';
 	}
 }
