@@ -1,2 +1,8 @@
 ﻿  소스.c
+C:\Cstudy\c언어 실습\소스.c(69,11): warning C4098: 'one_sample': 'void' 함수에서 값을 반환하고 있습니다.
+C:\Cstudy\c언어 실습\소스.c(93,6): warning C4101: 'error1' :참조되지 않은 지역 변수입니다.
+C:\Cstudy\c언어 실습\소스.c(92,6): warning C4101: 'leap2' :참조되지 않은 지역 변수입니다.
+C:\Cstudy\c언어 실습\소스.c(94,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\Cstudy\c언어 실습\소스.c(93,14): warning C4101: 'error2' :참조되지 않은 지역 변수입니다.
+C:\Cstudy\c언어 실습\소스.c(91,6): warning C4101: 'leap1' :참조되지 않은 지역 변수입니다.
   c언어 실습.vcxproj -> C:\Cstudy\c언어 실습\Debug\c언어 실습.exe
