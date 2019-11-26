@@ -5,8 +5,8 @@ static char daytab[2][13] = {
 	{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
 	{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} //
 };
-static int day[2] = {365, 366};
-static char *days[7] = {"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+static int day[2] = { 365, 366 };
+static char* days[7] = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
 int total = 0;
 int pmonth, pday, plus_year = 0;
 
@@ -19,7 +19,7 @@ int day_of_year(int year, int month, int day)
 	return day;
 }
 
-void month_day(int year, int month, int yearday, int *pmonth, int *pday)
+void month_day(int year, int month, int yearday, int* pmonth, int* pday)
 {
 	int i, leap;
 	leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
@@ -75,18 +75,18 @@ void one_sample(int year, int month, int day)
 void after(int year, int month, int day, int days)
 {
 	int left = days - else_day(year, month, day);
-	if (left>0) {
+	if (left > 0) {
 		month_day(year + 1, 1, left % 365, &pmonth, &pday);
 		printf("%d.%d.%d", year + left / 365 + 1, pmonth, pday);
 	}
 	else {
 		month_day(year, month, days, &pmonth, &pday);
-		printf("%d.%d.%d", year, pmonth, pday+day);
+		printf("%d.%d.%d", year, pmonth, pday + day);
 	}
 
 }
 
-int main(int arg, char *args[])
+int main(int arg, char* args[])
 {
 	int leap1, year1, month1, day1;
 	int leap2, year2, month2, day2;
