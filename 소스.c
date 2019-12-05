@@ -1,118 +1,208 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAXWORD 100
 
-static char daytab[2][13] = {
-	{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-	{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31} //
+struct plist
+{
+	int id;
+	char *item;
+	struct plist *next;
 };
-static int day[2] = { 365, 366 };
-static char* days[7] = { "mon", "tue", "wed", "thu", "fri", "sat", "sun" };
-int total = 0;
-int pmonth, pday, plus_year = 0;
-
-int day_of_year(int year, int month, int day)
+struct tnode
 {
-	int i, leap;
-	leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
-	for (i = 1; i < month; i++)
-		day += daytab[leap][i];
-	return day;
+	char *name;
+	struct plist *pb;
+	struct tnode *left;
+	struct tnode *right;
+};
+
+char *sItem[] = {"phone", "email", "address", "memo"};
+
+char *strdupl(char *);
+void addList(struct plist **pstart, struct plist *pj); //실습 1번
+struct tnode *addTree(struct tnode *, struct tnode *); //실습 1번
+void treeprint(struct tnode *);
+void dispNode(struct tnode *p);						//실습 1번
+struct tnode *searchTree(struct tnode *p, char *k); //실습 2번
+
+/* strdup: make a duplicate of a string */
+char *strdupl(char *s)
+{
+	char *p;
+	p = (char *)malloc(strlen(s) + 1); // +1 for '\0'
+	if (p != NULL)
+		strcpy(p, s);
+	return p;
 }
 
-void month_day(int year, int month, int yearday, int* pmonth, int* pday)
+/* addList: add a list at or next pi in increasing order of id */
+void addList(struct plist **pstart, struct plist *pj)
 {
-	int i, leap;
-	leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
-	for (i = month; yearday > daytab[leap][i]; i++)
-		yearday -= daytab[leap][i];
-	*pmonth = i;
-	*pday = yearday;
-}
-
-int else_day(int year, int month, int day)
-{
-	int i, leap, sum = 0;
-	leap = year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
-	sum += daytab[leap][month] - day;
-	for (i = month + 1; i <= 12; i++)
-		sum += daytab[leap][i];
-	return sum;
-}
-
-int between(int year1, int month1, int day1, int year2, int month2, int day2)
-{
-	int leap1, leap2;
-	int error1, error2;
-	int i, sample_leap;
-	leap1 = year1 % 4 == 0 && year1 % 100 != 0 || year1 % 400 == 0;
-	leap2 = year2 % 4 == 0 && year2 % 100 != 0 || year2 % 400 == 0;
-
-	error1 = year1 < 1 || year1 > 3000 || day1 < 1 || day1 > daytab[leap1][month1] || month1 < 1 || month1 > 12;
-	error2 = year2 < 1 || year2 > 3000 || day2 < 1 || day2 > daytab[leap2][month2] || month2 < 1 || month2 > 12;
-	if (error1 || error2)
-		return -1;
-	total += else_day(year1, month1, day1);
-	for (i = year1 + 1; i < year2; i++)
-	{
-		sample_leap = i % 4 == 0 && i % 100 != 0 || i % 400 == 0;
-		total += day[sample_leap];
-	}
-	total += day_of_year(year2, month2, day2);
-	return 0;
-}
-
-void one_sample(int year, int month, int day)
-{
-	int num = between(1, 1, 1, year, month, day);
-	if (num == -1) {
-		printf("error");
-		return 0;
-	}
-	else
-		printf("%s", days[total % 7]);
-}
-
-void after(int year, int month, int day, int days)
-{
-	int left = days - else_day(year, month, day);
-	if (left > 0) {
-		month_day(year + 1, 1, left % 365, &pmonth, &pday);
-		printf("%d.%d.%d", year + left / 365 + 1, pmonth, pday);
-	}
-	else {
-		month_day(year, month, days, &pmonth, &pday);
-		printf("%d.%d.%d", year, pmonth, pday + day);
-	}
-
-}
-
-int main(int arg, char* args[])
-{
-	int leap1, year1, month1, day1;
-	int leap2, year2, month2, day2;
-	int error1, error2;
-	int i, k1, k2, num;
-	k1 = sscanf(args[1], "%d.%d.%d", &year1, &month1, &day1);
-	if (k1 < 3)
-	{
-		printf("error");
-		return 0;
-	}
-	if (arg == 2)
-		one_sample(year1, month1, day1);
+	//실습 1번
+	//id 오름차순으로 리스트에 pj를 삽입하는 함수,
+	//pstart는 리스트 첫 노드의 포인터의 포인터
+	struct plist *temp = *pstart;
+	if (*pstart == NULL)
+		*pstart = pj;
+	else if (pj->id > temp->id)
+		addList(&(temp->next), pj);
 	else
 	{
-		k2 = sscanf(args[2], "%d.%d.%d", &year2, &month2, &day2);
-		if (k2 == 1)
-			after(year1, month1, day1, year2);
-		else if (k2 == 3) {
-			num = between(year1, month1, day1, year2, month2, day2);
-			if (num == -1)
-				printf("error");
-			else
-				printf("%d", total);
-		}
+		pj->next = temp;
+		*pstart = pj;
+	}
+}
+
+/* addTree: add a node at or below p
+print error message if there is same name */
+struct tnode *addTree(struct tnode *p, struct tnode *r)
+{
+	//실습 1번
+	//트리에 r을 삽입하는 함수
+
+	//처음 이 함수가 호출되었을 때, p는 트리의 루트를 의미함.
+
+	//p==NULL일 경우, p에 r을 대입 후 p를 반환
+	// strcmp를 활용하여 p와 r의 name 아스키값을 비교,
+	//이스키 값이 p==r라면, 이미 트리에 같은 name이 저장되있음을 의미 -> error 출력
+	//p>r라면 r은 p의 왼쪽자손, p<r이라면 r은 p의 오른쪽 자손이 됨을 의미함.
+	//p의 값(해당 함수의 첫 번째 인자)을 바꿔가며 해당 함수를 재귀적으로 호출하고,
+	//최종적으로 트리의 리프에 r 삽입
+	if (p == NULL)
+		p = r;
+	else
+	{
+		int ret = strcmp(p->name, r->name);
+		if (ret < 0)
+			p->right = addTree(p->right, r);
+		else if (ret == 0)
+			printf("error\n");
 		else
-			printf("error");
+			p->left = addTree(p->left, r);
+	}
+	return p;
+}
+/* treeprint: in-order print of tree p */
+void treePrint(struct tnode *p)
+{
+	if (p != NULL)
+	{
+		treePrint(p->left);
+		dispNode(p);
+		treePrint(p->right);
+	}
+}
+/*dispNode: display a node including list*/
+void dispNode(struct tnode *p)
+{
+	//실습 1번
+	//p의 name과 pb의 모든 정보를 출력하는 함
+	//p가 NULL일 경우 “error” 출력.
+	/*출력 예시
+	name: aa phone: 010 7297 1180 memo: this is memo
+	p의 이름 출력 후, 리스트의 정보를 출력한다.(빈 리스트일 경우, 이름까지만 출력)
+	*/
+	if (p == NULL)
+		printf("error\n");
+	else
+	{
+		printf("name: %s", p->name);
+		struct plist *temp = p->pb;
+		for (int i = 0; i < 4; i++)
+		{
+			if (temp == NULL)
+				break;
+			printf(" %s: %s", sItem[temp->id - 1], temp->item);
+			temp = temp->next;
+		}
+		printf("\n");
+	}
+}
+/* searchTree: search tree with key by non-recursion
+return tnode pointer matched or NULL if not found */
+struct tnode *searchTree(struct tnode *p, char *k)
+{
+	// 실습 2번
+	// p는 트리의 루트, 트리에서 name이 k인 노드를 찾아 리턴하는 함수,
+	// 트리에 name이 k인 노드가 없다면 NULL 리턴
+	// 재귀호출이 아닌 반복문 사용할 것.
+	int ret;
+	struct tnode *temp = p;
+	while (temp != NULL)
+	{
+		ret = strcmp(temp->name, k);
+		if (ret < 0)
+			temp = temp->right;
+		else if (ret == 0)
+			return temp;
+		else
+			temp = temp->left;
+	}
+	return NULL;
+}
+int main()
+{
+	struct tnode *root = NULL;
+	while (1)
+	{
+		int menu;
+		printf("(0)exit (1)add (2)print (3)search\n");
+		scanf("%d", &menu);
+		if (menu == 0)
+		{
+			break;
+		}
+		else if (menu == 1)
+		{
+
+			char name[MAXWORD];
+			scanf("%s", name);
+
+			struct tnode *temp = (struct tnode *)malloc(sizeof(struct tnode));
+			temp->name = strdupl(name);
+			temp->pb = NULL;
+			temp->left = NULL;
+			temp->right = NULL;
+
+			struct plist **start = &(temp->pb);
+
+			while (1)
+			{
+				int type;
+				printf("(0)exit (1)phone (2)email (3)address (4)memo \n");
+				scanf("%d", &type);
+				if (type == 0)
+				{
+					break;
+				}
+				else if (type <= 4)
+				{
+					char content[MAXWORD];
+					scanf(" %[^\n]", content);
+					// %앞에 꼭 한 칸 뛰어야 정상 작동
+
+					struct plist *tlist = (struct plist *)malloc(sizeof(struct plist));
+					tlist->id = type;
+					tlist->item = strdupl(content);
+					tlist->next = NULL;
+
+					addList(start, tlist);
+				}
+			}
+
+			root = addTree(root, temp);
+		}
+		else if (menu == 2)
+		{
+			treePrint(root);
+		}
+		else if (menu == 3)
+		{
+			char name[MAXWORD];
+			scanf("%s", name);
+			dispNode(searchTree(root, name));
+		}
 	}
 }

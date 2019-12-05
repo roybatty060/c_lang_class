@@ -1,8 +1,6 @@
 ﻿  소스.c
-C:\Cstudy\c언어 실습\소스.c(69,11): warning C4098: 'one_sample': 'void' 함수에서 값을 반환하고 있습니다.
-C:\Cstudy\c언어 실습\소스.c(93,6): warning C4101: 'error1' :참조되지 않은 지역 변수입니다.
-C:\Cstudy\c언어 실습\소스.c(92,6): warning C4101: 'leap2' :참조되지 않은 지역 변수입니다.
-C:\Cstudy\c언어 실습\소스.c(94,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\Cstudy\c언어 실습\소스.c(93,14): warning C4101: 'error2' :참조되지 않은 지역 변수입니다.
-C:\Cstudy\c언어 실습\소스.c(91,6): warning C4101: 'leap1' :참조되지 않은 지역 변수입니다.
+C:\Cstudy\c언어 실습\소스.c(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Cstudy\c언어 실습\소스.c(77,21): warning C4133: '함수': 'tnode *'과(와) 'const char *' 사이의 형식이 호환되지 않습니다.
+C:\Cstudy\c언어 실습\소스.c(77,24): warning C4133: '함수': 'tnode *'과(와) 'const char *' 사이의 형식이 호환되지 않습니다.
+C:\Cstudy\c언어 실습\소스.c(131): warning C4716: 'searchTree': 값을 반환해야 합니다.
   c언어 실습.vcxproj -> C:\Cstudy\c언어 실습\Debug\c언어 실습.exe
